@@ -10,6 +10,10 @@ $rootCliPages = $rootFront . "cliente/";
 $rootFunPages = $rootFront . "funcionario/";
 $connRoute = $_SERVER['DOCUMENT_ROOT'] . '/Pet-Shop/backend/conexao.php';
 
+
+
+
+
 // ----------------------    Rotas Estáticas    -----------------------------
 
 $blogRoute = $rootCliPages . "blog.php";
