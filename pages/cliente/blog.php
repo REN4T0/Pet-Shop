@@ -99,7 +99,7 @@ if (isset($_SESSION['tipo'])) {
 
         <img src="../img-estatico/gato-blog.svg" alt="gato">
 
-        <p>Descubra curiosidades e novidades sobre o mundo pet na sessão blog do Hamtaro do Petshop!</p>
+        <p>RENATO ESTEVE AQUI! Descubra curiosidades e novidades sobre o mundo pet na sessão blog do Hamtaro do Petshop!</p>
 
         <div class="divisoes">
             <div class="divisao-maior"></div>
