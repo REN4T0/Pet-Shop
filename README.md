@@ -24,7 +24,7 @@
 - [x] Apresentação 
 
 ## Etapas de manutenção
-*EQUIPE - Nalanda, Nathan, Robert e Renato
+*EQUIPE - Nalanda, Nathan, Robert e Renato*
 
 - [ ] Funcionalidade de transporte do pet
 
