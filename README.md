@@ -23,6 +23,12 @@
 - [x] Treino apresentação 
 - [x] Apresentação 
 
+## Etapas de manutenção
+# EQUIPE - Nalanda, Nathan, Robert e Renato
+
+- [ ] Funcionalidade de transporte do pet
+
+
 
 ## Links e documentos
 
