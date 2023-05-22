@@ -23,6 +23,11 @@ select, input{
     border: 2px solid #403F3F;
 }
 
+/* #optDelivery{
+    width: auto !important;
+    height: auto !important;
+} */
+
 div button.limpar{
     border: 2px solid #8C52FF;
     background-color: transparent;

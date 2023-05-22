@@ -1,7 +1,7 @@
 <?php
 $host = "localhost";
 $user = "root";
-$pass = '';
+$pass = 'Senai115';
 $dbname = "petshop";
 
 // Criar a conexao com o Banco de Dados

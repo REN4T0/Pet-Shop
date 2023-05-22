@@ -141,10 +141,29 @@ if (isset($_SESSION['tipo'])) {
                 <label for="dataAgen">Data de Agendamento</label><br>
                 <input type="date" id="dataAgen" onchange="paginacao('gerarTabelaFazAgenCli')"><br><br>
             </div>
-
+            
+            
             <div>
                 <button class="limpar" type="reset">Limpar</button>
             </div>
+
+            <div style="justify-self: flex-start; margin-top: 1rem;">
+                <input style="width: auto !important; height: auto !important;" type="checkbox" name="optDelivery" id="optDelivery" onchange="aparecerSelect()">
+                <label for="optDelivery">Deseja o transporte do seu pet?</label>
+            </div>
+
+            <br>
+
+            <div id="divTransporte" style="display: none;">
+                <label for="transporte">Como deseja o transporte?</label><br>
+                <select name="transporte" id="transporte">
+                    <option value="" disabled selected hidden>Selecione</option>
+                    <option value="buscar">Buscar</option>
+                    <option value="trazer">Trazer</option>
+                    <option value="buscar/trazer">Buscar/Trazer</option>
+                </select>
+            </div>
+
         </fieldset>
 
     </form>
@@ -153,6 +172,18 @@ if (isset($_SESSION['tipo'])) {
         <table id="fazAgend"></table>
         <div id="links"></div>
     </div>
+
+    <script>
+        // Função que vai aparecer o select para selecionar o tipo de transporte
+        function aparecerSelect(){
+            let checkTransporte = document.querySelector('#optDelivery');
+            if(checkTransporte.checked){
+                document.querySelector('#divTransporte').style = "display: block; justify-self: flex-start;"
+            }else{
+                document.querySelector('#divTransporte').style = "display: none;"
+            }
+        }
+    </script>
 
     <script src="../script.js"></script>
     <script src="<?php echo $functionsRoute; ?>"></script>

@@ -79,6 +79,7 @@ if (!isset($_SESSION['tipo'])) {
                         <option value="Veterinário">Veterinário</option>
                         <option value="Secretaria">Secretária</option>
                         <option value="Esteticista">Esteticista</option>
+                        <option value="Motorista">Motorista</option>
                     </select>
 
                 </div>
