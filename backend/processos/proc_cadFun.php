@@ -86,6 +86,8 @@ if ($certo1 && $certo2) {
             // Trabalha qualquer outro erro
             $_SESSION['msgCadFun'] = "Funcionário não Cadastrado";
         }
+        // echo $profissao . "<br>";
+        // echo $e->getMessage();
         header('Location: ' . $cadastrarFunRoute);
     }
 } else {
