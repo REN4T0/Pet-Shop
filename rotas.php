@@ -37,6 +37,7 @@ $agendarParaClienteRoute = $rootFunPages . "agendarParaCliente.php";
 $cadAnimalParaClienteRoute = $rootFunPages . "cadAnimalParaCliente.php";
 $comentariosRoute = $rootFunPages . "comentarios.php";
 $cadCliFunRoute = $rootFunPages . "cadastroCliFun.php";
+$cadVeiculoRoute = $rootFunPages . "cadVeiculo.php";
 
 //                           FIM Rotas Funcionário
 
@@ -83,6 +84,7 @@ $viacepRoute = $rootBackFunctions . "viacep.js";
 $dataHojeRoute = $rootBackFunctions . "dataHoje.js";
 $confSenhaRoute = $rootBackFunctions . "confSenha.js";
 $toastRoute = $rootBackFunctions . "toast.js";
+$validPlacaRoute = $rootBackFunctions . "validPlaca.js";
 
 
 
