@@ -75,6 +75,7 @@ $procSalvarDetalhesRoute = $rootBackProc . "proc_salvarDetalhes.php";
 $procCadAnimalFunRoute = $rootBackProc . "proc_cadAnimalFun.php";
 $procComentarioRoute = $rootBackProc . "proc_Comentario.php";
 $procCadCliFunRoute = $rootBackProc . "proc_cadCliFun.php";
+$procCadCarRoute = $rootBackProc . "proc_cadVeiculo.php";
 
 
 

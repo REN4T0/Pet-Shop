@@ -49,7 +49,7 @@ if (!isset($_SESSION['tipo'])) {
             <h1>CADASTRE UM VEÍCULO NA PLATAFORMA!</h1>
         </div>
 
-        <form action="<?php echo $procCadFunRoute; ?>" method="post">
+        <form action="<?php echo $procCadCarRoute; ?>" method="post">
 
             <div class="box-maior-input">
 
