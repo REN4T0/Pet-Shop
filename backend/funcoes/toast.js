@@ -295,6 +295,12 @@ function activateToast(param) { // função que ativa os avisos na tela de acord
       });
       break; 
 
+    case "Placa existente":
+      Toast.fire({
+        icon: "error",
+        title: `${param}`,
+      });
+      break; 
   } 
 
 }

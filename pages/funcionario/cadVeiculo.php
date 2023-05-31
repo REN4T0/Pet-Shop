@@ -3,7 +3,6 @@ include_once("../../rotas.php");
 include_once($connRoute);
 require_once $funcoesRoute;
 
-
 if ($_SESSION['tipo'] != "admin") {
     // $_SESSION['msgRotaProibida'] = "Você Não possui permissão para entrar nessa página";
     header("Location: " . $agendamentoFunRoute);
@@ -23,7 +22,7 @@ if (!isset($_SESSION['tipo'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar Funcionário</title>
+    <title>Cadastrar Veículo</title>
 
     <link rel="stylesheet" href="../css-dinamico/meu-perfil.css">
     <link rel="stylesheet" href="../css-dinamico/header-corporativo.css">
@@ -35,13 +34,15 @@ if (!isset($_SESSION['tipo'])) {
 
 </head>
 
-<body onload="activateToast(<?php echo verificarSession(['msgCadFun']); ?>)">
+<body onload="activateToast('Veículo cadastrado com sucesso')">
 
     <?php
-    if (isset($_SESSION['msgCadFun'])) {
-        unset($_SESSION['msgCadFun']);
-    }
+        if (isset($_SESSION['msgCadCar'])) {
+            // echo $_SESSION['msgCadCar'];
+            unset($_SESSION['msgCadCar']);
+        }
     ?>
+
     <div>
 
         <div class="informacoes-superior">
