@@ -154,7 +154,7 @@ function gerarTabelaAgenCli() {
 
     // String de preparação
     $stmt = $conn->prepare("SELECT Funcionarios.nome, data_agendamento,
-        horario_agendamento, Animais.nome, Agendamentos.tipo, `status`, pk_Agendamento FROM Agendamentos
+        horario_agendamento, Animais.nome, Agendamentos.tipo, `status`, Agendamentos.transporte pk_Agendamento FROM Agendamentos
             INNER JOIN Animais
             ON Agendamentos.fk_Animal = Animais.pk_Animal
             INNER JOIN Clientes
@@ -180,12 +180,13 @@ function gerarTabelaAgenCli() {
             <th>Tipo</th>
             <th>Detalhes</th>
             <th>Status</th>
+            <th>Transporte</th>
         </tr></thead>";
 
     if (mysqli_num_rows($resultado) == 0) {
         $tabela = $tabela . "
             <tr>
-                <td colspan=7>Não há agendamentos cadastrados</td>
+                <td colspan=8>Não há agendamentos cadastrados</td>
             </tr>
             ";
     } else {
@@ -210,6 +211,7 @@ function gerarTabelaAgenCli() {
                     <td>$row[4]</td>
                     <td>$botao</td>
                     <td>$row[5]</td>
+                    <td>$row[6]</td>
                 </tr>";
         }
     }
@@ -412,8 +414,9 @@ function fazAgendamentoCli() {
 
     if ($_GET['idAni'] != 0) {
         try {
-            $stmt = $conn->prepare("UPDATE Agendamentos SET fk_Animal = ?, `status` = 'Marcado' WHERE pk_Agendamento = ?");
-            $stmt->bind_param("ss", $_GET['idAni'], $_GET['idAgen']);
+            // $transporte = htmlspecialchars($_GET['transporte']);
+            $stmt = $conn->prepare("UPDATE Agendamentos SET fk_Animal = ?, transporte = ?, `status` = 'Marcado' WHERE pk_Agendamento = ?");
+            $stmt->bind_param("sss", $_GET['idAni'], $_GET['transporte'], $_GET['idAgen']);
             // Executa o sql
             $stmt->execute();
 
