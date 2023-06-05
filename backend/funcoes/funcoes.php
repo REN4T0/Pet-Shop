@@ -154,7 +154,7 @@ function gerarTabelaAgenCli() {
 
     // String de preparação
     $stmt = $conn->prepare("SELECT Funcionarios.nome, data_agendamento,
-        horario_agendamento, Animais.nome, Agendamentos.tipo, `status`, Agendamentos.transporte pk_Agendamento FROM Agendamentos
+        horario_agendamento, Animais.nome, Agendamentos.tipo, `status`, Agendamentos.transporte, pk_Agendamento FROM Agendamentos
             INNER JOIN Animais
             ON Agendamentos.fk_Animal = Animais.pk_Animal
             INNER JOIN Clientes
@@ -197,9 +197,9 @@ function gerarTabelaAgenCli() {
             $botao = "";
 
             if ($row[5] == "Marcado") {
-                $botao = "<button class='cancelar' onclick='activeModal($row[6]," . '"Cancelar"' . ")'>Cancelar</button>";
+                $botao = "<button class='cancelar' onclick='activeModal($row[7]," . '"Cancelar"' . ")'>Cancelar</button>";
             } elseif ($row[5] == "Concluido") {
-                $botao = "<button class='finalizar cancelar' onclick='activeModal($row[6]," . '"Detalhes"' . ")'>Detalhes</button>";
+                $botao = "<button class='finalizar cancelar' onclick='activeModal($row[7]," . '"Detalhes"' . ")'>Detalhes</button>";
             }
 
             $tabela = $tabela .
@@ -336,7 +336,7 @@ function gerarTabelaFazAgenCli() {
     if (mysqli_num_rows($resultado) == 0) {
         $tabela = $tabela . "
             <tr>
-                <td colspan=7>Não há agendamentos cadastrados</td>
+                <td colspan=8>Não há agendamentos cadastrados</td>
             </tr>
             ";
     } else {
@@ -415,7 +415,7 @@ function fazAgendamentoCli() {
     if ($_GET['idAni'] != 0) {
         try {
             // $transporte = htmlspecialchars($_GET['transporte']);
-            $stmt = $conn->prepare("UPDATE Agendamentos SET fk_Animal = ?, transporte = ?, `status` = 'Marcado' WHERE pk_Agendamento = ?");
+            $stmt = $conn->prepare("UPDATE Agendamentos SET fk_Animal = ?, `transporte` = ?, `status` = 'Marcado' WHERE pk_Agendamento = ?");
             $stmt->bind_param("sss", $_GET['idAni'], $_GET['transporte'], $_GET['idAgen']);
             // Executa o sql
             $stmt->execute();
@@ -454,7 +454,7 @@ function gerarTabelaAgenFun() {
     if ($_SESSION['tipo'] == 'Veterinario' || $_SESSION['tipo'] == 'Esteticista') {
 
         // String de preparação
-        $stmt = $conn->prepare("SELECT Funcionarios.nome, data_agendamento, horario_agendamento, Animais.nome, Clientes.nome, `status`, pk_Agendamento FROM Agendamentos
+        $stmt = $conn->prepare("SELECT Funcionarios.nome, data_agendamento, horario_agendamento, Animais.nome, Clientes.nome, `status`, pk_Agendamento, transporte FROM Agendamentos
             LEFT JOIN Animais
             ON Agendamentos.fk_Animal = Animais.pk_Animal
             LEFT JOIN Clientes
@@ -477,7 +477,7 @@ function gerarTabelaAgenFun() {
         $stmtPg->bind_param("sss", $_SESSION['idFun'], $pesquisar, $status);
 
     } else {
-        $stmt = $conn->prepare("SELECT Funcionarios.nome, data_agendamento, horario_agendamento, Animais.nome, Clientes.nome, `status`, pk_Agendamento from Agendamentos
+        $stmt = $conn->prepare("SELECT Funcionarios.nome, data_agendamento, horario_agendamento, Animais.nome, Clientes.nome, `status`, pk_Agendamento, transporte from Agendamentos
             LEFT JOIN Animais
             ON Agendamentos.fk_Animal = Animais.pk_Animal
             LEFT JOIN Clientes
@@ -513,12 +513,13 @@ function gerarTabelaAgenFun() {
             <th>Dono</th>
             <th>Detalhes</th>
             <th>Status</th>
+            <th>transporte</th>
         </tr></thead>";
 
     if (mysqli_num_rows($resultado) == 0){
         $tabela = $tabela . "
             <tr>
-                <td colspan=7>Não há agendamentos cadastrados</td>
+                <td colspan=8>Não há agendamentos cadastrados</td>
             </tr>
             ";
     } else {
@@ -544,6 +545,7 @@ function gerarTabelaAgenFun() {
                     <td>$row[4]</td>
                     <td>$det</td>
                     <td>$row[5]</td>
+                    <td><a href='#'onclick='activeModalTransportFun($row[6]," . '"' . $_SESSION['tipo'] . '"' . ")'>$row[7]</a></td>
                 </tr>";
         }
     }

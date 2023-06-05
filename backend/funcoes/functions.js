@@ -5,11 +5,22 @@ function executeFunctions(func, id) {
     if (func == "fazAgendamentoCli") {
         // Pega o id do animal
         var idAnimal = document.getElementById('animais').value
+        // Variável do transporte
+        let transporte = ''
+        // Verifica se a checkbox foi acionada
+        let checkEntrega = document.getElementById('optDelivery')
+        if(checkEntrega.checked){
+            //pega o valor do tranporte
+            transporte = document.getElementById('transporte').value
+        }else{
+            transporte = "nenhum"
+        }
         // Passa o id do agendamento e do animal para adicionar na url
-        extra = `&idAgen=${id}&idAni=${idAnimal}`
+        extra = `&idAgen=${id}&idAni=${idAnimal}&transporte=${transporte}`
     } else if (func == "fazerAgenParaCli"){
         var idAnimal = document.getElementById('animais').value;
-        extra = `&idAgen=${id}&idAnimal=${idAnimal}`;
+        let transporte = document.getElementById('#transporte').value
+        extra = `&idAgen=${id}&idAnimal=${idAnimal}&transporte=${transporte}`;
     }
 
     var xhr = new XMLHttpRequest();
@@ -372,6 +383,62 @@ function activeModalDetalhesFun(id, tipo) {
                 }
             } else {
                 // Se não só mostra que os detalhes não foram definidos.
+                document.getElementById("container-modal").innerHTML = `
+                <div class='box-modal-detalhes'>
+                    <h2>Descrição do Agendamento</h2>
+                    <p class='descricao-resposta'>${response}</p>
+                    <span onclick="document.getElementById('id01').style.display='none'">&times;</span>
+                </div>`;
+            }
+        }
+    }
+    xhr.send();
+}
+
+function activeModalTransportFun(id, tipo) {
+    // Muda a modal para block, para que possa ser vista
+    document.getElementById("id02").style.display = "flex"
+    var xhr = new XMLHttpRequest();
+    // Executa o arquivo que irá iniciar a função
+    xhr.open("GET", location.origin + `/Pet-Shop/backend/execute.php?function=getDesc&id=${id}`, false);
+    xhr.onload = function () {
+        if (xhr.readyState === xhr.DONE && xhr.status === 200) {
+            var response = xhr.responseText; // Pega a resposta do servidor
+            // Verifica se o funcionário não é um admin ou secretaria
+            if (response == 'Os detalhes não foram adicionados ainda'){
+                if (tipo == 'Veterinario' || tipo == 'Esteticista') {
+                    // então mostra o campo para adicionar os detalhes
+                    document.getElementById("container-modal2").innerHTML = `
+
+                    <div class='box-modal-detalhes'>
+
+                        <h2>Descrição do Agendamento</h2>
+                        <form action=>
+                            <input name="ide" hidden value="${id}"></input>
+
+                            <label for='nomeMotorista'>Motorista</label>
+                            <input type='text' name='nomeMotorista'>
+
+                            <label for='veiculo'>Placa do veículo</label>
+                            <input type='text' name='veiculo' minlength='7' maxlength='7'>
+
+                            <span onclick="document.getElementById('id02').style.display='none'">&times;</span>
+                            <input class='botao-salvar' type='submit' value='Salvar'></input> 
+                        </form>
+                    </div>`;    
+
+                } else {
+                    // Senão só mostra que os detalhes não foram definidos.
+                    document.getElementById("container-modal").innerHTML = `
+                    <div class='box-modal-detalhes'>
+                        <h2>Descrição do Agendamento</h2>
+                        <p>Os detalhes não foram adicionados ainda</p>
+                        <span onclick="document.getElementById('id02').style.display='none'">&times;</span> 
+                    </div>`;
+
+                }
+            } else {
+                // Senão só mostra que os detalhes não foram definidos.
                 document.getElementById("container-modal").innerHTML = `
                 <div class='box-modal-detalhes'>
                     <h2>Descrição do Agendamento</h2>

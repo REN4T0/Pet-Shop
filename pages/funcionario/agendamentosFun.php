@@ -139,6 +139,16 @@ if (!isset($_SESSION['tipo'])) {
         </div>
     </form>
 
+    <form action="<?php echo $procUnirDriverToCarRoute; ?>" method="post">
+
+        <div id="id02" class="w3-modal modal-detalhes">
+            <div class="teste">
+                <div class="w3-container" id="container-modal2">
+                </div>
+            </div>
+        </div>
+    </form>
+
 
     <script src="../script.js"></script>
     <script src="../../backend/funcoes/toast.js"></script>
