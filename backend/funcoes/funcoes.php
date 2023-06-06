@@ -513,7 +513,7 @@ function gerarTabelaAgenFun() {
             <th>Dono</th>
             <th>Detalhes</th>
             <th>Status</th>
-            <th>transporte</th>
+            <th>Transporte</th>
         </tr></thead>";
 
     if (mysqli_num_rows($resultado) == 0){
@@ -545,7 +545,7 @@ function gerarTabelaAgenFun() {
                     <td>$row[4]</td>
                     <td>$det</td>
                     <td>$row[5]</td>
-                    <td><a href='#'onclick='activeModalTransportFun($row[6]," . '"' . $_SESSION['tipo'] . '"' . ")'>$row[7]</a></td>
+                    <td><button class='cancelar finalizar' onclick='activeModalTransportFun($row[6]," . '"' . $_SESSION['tipo'] . '"' . ")'>$row[7]</button></td>
                 </tr>";
         }
     }
@@ -623,6 +623,7 @@ function profissionais() {
     return json_encode($retornar);
 }
 
+// Função que vai pegar os detalhes
 function getDesc() {
     require_once($_SERVER['DOCUMENT_ROOT'] . '/Pet-Shop/backend/conexao.php');
 
@@ -642,6 +643,41 @@ function getDesc() {
 
     return $retornar;
 }
+
+// Função que vai retornar a lista de motoristas e veículos do banco
+function getDrivers() {
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/Pet-Shop/backend/conexao.php');
+
+    // Selecionando motoristas
+    $selectDriver = "SELECT pk_Funcionario, nome FROM funcionarios WHERE profissao = 'Motorista'";
+    $executeSelect = mysqli_query($conn, $selectDriver);
+
+    // Criando o elemento HTML para selecionar motorista
+    $resposta = "<label for='nomeMotorista'>Motorista</label> <select name='motorista'> ";
+
+    // Armazenando options com os motoristas na variável resposta
+    while($driver = mysqli_fetch_assoc($executeSelect)){
+        $resposta .= "<option value='" . $driver['pk_Funcionario'] . "'>" . $driver['nome'] . "</option> ";
+    }
+
+    // Concluindo o select do motorista e criando o elemento HTML para selecionar o veículo
+    $resposta .= "</select> <label for='veiculo'>Placa do veículo</label> <select name='veiculo'>";
+
+    // Selecionando veículos
+    $selectCar = "SELECT pk_veiculo, placa FROM veiculos";
+    $executeSelect = mysqli_query($conn, $selectCar);
+
+    while($car = mysqli_fetch_assoc($executeSelect)){
+        $resposta .= "<option value='" . $car['pk_veiculo'] . "'>" . $car['placa'] . "</option> ";
+    }
+
+    // Fechando select do veículo
+    $resposta .= "</select>";
+
+    // Retornando os options com os motoristas
+    return $resposta;
+}
+
 
 
 function gerarTabelaDeleteFun() {

@@ -1,3 +1,6 @@
+DROP DATABASE petshop;
+CREATE DATABASE petshop;
+USE petshop;
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
@@ -36,7 +39,7 @@ CREATE TABLE `agendamentos` (
   `status` enum('Disponivel','Marcado','Em_Andamento','Concluido','Cancelado') NOT NULL DEFAULT 'Disponivel',
   `descricao` text DEFAULT NULL,
   `tipo` enum('Banho','Tosa','Veterinário','Banho e Tosa') NOT NULL,
-  `transporte` enum('buscar','trazer','buscar/trazer','nenhum') NOT NULL,
+  `transporte` enum('buscar','trazer','buscar/trazer','nenhum') DEFAULT 'nenhum',
   `ativo` enum('ativo','inativo') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

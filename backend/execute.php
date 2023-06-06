@@ -62,4 +62,10 @@ switch ($_GET['function']) {
     case 'tabelaComentarios':
         echo tabelaComentarios();
         break;
+    case 'getDrivers':
+        echo getDrivers();
+        break;
+    // case 'getCars':
+    //     echo getCars();
+    //     break;
 }

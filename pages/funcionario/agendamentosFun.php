@@ -139,6 +139,7 @@ if (!isset($_SESSION['tipo'])) {
         </div>
     </form>
 
+    <!-- THE MODAL 2 - para exibir a parte de linkar o motorista ao veículo -->
     <form action="<?php echo $procUnirDriverToCarRoute; ?>" method="post">
 
         <div id="id02" class="w3-modal modal-detalhes">

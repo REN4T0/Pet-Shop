@@ -395,17 +395,19 @@ function activeModalDetalhesFun(id, tipo) {
     xhr.send();
 }
 
+// Função para a modal onde irei linkar o motorista com o veículo
 function activeModalTransportFun(id, tipo) {
     // Muda a modal para block, para que possa ser vista
     document.getElementById("id02").style.display = "flex"
     var xhr = new XMLHttpRequest();
+    
     // Executa o arquivo que irá iniciar a função
-    xhr.open("GET", location.origin + `/Pet-Shop/backend/execute.php?function=getDesc&id=${id}`, false);
+    xhr.open("GET", location.origin + `/Pet-Shop/backend/execute.php?function=getDrivers&id=${id}`, false);
     xhr.onload = function () {
         if (xhr.readyState === xhr.DONE && xhr.status === 200) {
             var response = xhr.responseText; // Pega a resposta do servidor
             // Verifica se o funcionário não é um admin ou secretaria
-            if (response == 'Os detalhes não foram adicionados ainda'){
+            // if (response == 'Os detalhes não foram adicionados ainda'){
                 if (tipo == 'Veterinario' || tipo == 'Esteticista') {
                     // então mostra o campo para adicionar os detalhes
                     document.getElementById("container-modal2").innerHTML = `
@@ -416,11 +418,7 @@ function activeModalTransportFun(id, tipo) {
                         <form action=>
                             <input name="ide" hidden value="${id}"></input>
 
-                            <label for='nomeMotorista'>Motorista</label>
-                            <input type='text' name='nomeMotorista'>
-
-                            <label for='veiculo'>Placa do veículo</label>
-                            <input type='text' name='veiculo' minlength='7' maxlength='7'>
+                                ${response}
 
                             <span onclick="document.getElementById('id02').style.display='none'">&times;</span>
                             <input class='botao-salvar' type='submit' value='Salvar'></input> 
@@ -446,7 +444,7 @@ function activeModalTransportFun(id, tipo) {
                     <span onclick="document.getElementById('id01').style.display='none'">&times;</span>
                 </div>`;
             }
-        }
+        // }
     }
     xhr.send();
 }
