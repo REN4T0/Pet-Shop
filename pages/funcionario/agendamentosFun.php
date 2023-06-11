@@ -38,7 +38,7 @@ if (!isset($_SESSION['tipo'])) {
 
 <body
     onload="filtros('agendamentosFun'), paginacao('gerarTabelaAgenFun'), 
-    activateToast(<?php echo verificarSession(['msgCadData', 'msgCadFun', 'msgRotaProibida', 'login', 'msgCadCliFun']); ?>)">
+    activateToast(<?php echo verificarSession(['msgCadData', 'msgCadFun', 'msgRotaProibida', 'login', 'msgCadCliFun', 'msgLinkDriverCar']); ?>)">
 
     <header class="header-corporativo">
         <div class="box-logo-barra-de-pesquisa-perfil">
@@ -79,7 +79,9 @@ if (!isset($_SESSION['tipo'])) {
         echo "<a href=" . $cadastroCliRoute . ">Cadastrar Cliente</a>";
         echo "<a href=" . $listarFunRoute . ">Listar Funcionários</a>";
         echo "<a href=" . $comentariosRoute . ">Comentarios dos Clientes</a>";
-        echo "<a href=" . $cadVeiculoRoute . ">Cadastrar veículos</a>";   
+        echo "<a href=" . $cadVeiculoRoute . ">Cadastrar veículos</a>";
+        echo "<a href=" . $listarVeiculoRoute . ">Listar veículos</a>";
+        //    
      }
 
 
@@ -90,6 +92,11 @@ if (!isset($_SESSION['tipo'])) {
             if (isset($_SESSION['msgCadFun'])) {
                 echo $_SESSION['msgCadFun'];
                 unset($_SESSION['msgCadFun']);
+            }
+
+            if (isset($_SESSION['msgLinkDriverCar'])) {
+                echo $_SESSION['msgLinkDriverCar'];
+                unset($_SESSION['msgLinkDriverCar']);
             }
 
             if (isset($_SESSION['msgRotaProibida'])) {

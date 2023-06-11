@@ -83,6 +83,7 @@ if (!isset($_SESSION['tipo'])) {
                 echo "<a href=" . $listarFunRoute . ">Listar Funcionários</a>";
                 echo "<a href=" . $comentariosRoute . ">Comentarios dos Clientes</a>";
                 echo "<a href=" . $cadVeiculoRoute . ">Cadastrar veículos</a>"; 
+                echo "<a href=" . $listarVeiculoRoute . ">Listar veículos</a>";
             }
 
 

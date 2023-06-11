@@ -157,10 +157,10 @@ if (isset($_SESSION['tipo'])) {
             <div id="divTransporte" style="display: none;">
                 <label for="transporte">Como deseja o transporte?</label><br>
                 <select name="transporte" id="transporte">
-                    <!-- <option value="" disabled selected hidden>Selecione</option> -->
-                    <option value="buscar">Buscar</option>
-                    <option value="trazer">Trazer</option>
-                    <option value="buscar/trazer">Buscar/Trazer</option>
+                    <option value="Nenhum" selected>Nenhum</option>
+                    <option value="Buscar">Buscar</option>
+                    <option value="Trazer">Trazer</option>
+                    <option value="Buscar/Trazer">Buscar/Trazer</option>
                 </select>
             </div>
 

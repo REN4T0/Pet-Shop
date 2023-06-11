@@ -123,7 +123,12 @@ if (!loged()) { // Verifica se há um usuário logado
 
 
     <div id="id01" class="w3-modal">
-        <div class="w3-container" id="container-modal">
+        <div class="w3-container" id="container-modal"></div>
+    </div>
+
+    <div id="id02" class="w3-modal modal-detalhes">
+        <div class="teste">
+            <div class="w3-container" id="container-modal2"></div>
         </div>
     </div>
 

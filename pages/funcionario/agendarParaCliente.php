@@ -74,9 +74,25 @@ if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] != 'Secretaria') {
 
       <div class="box-input box-pesquisa" id="divpesq" style="display: none;">
         <input type="text" placeholder="Pesquise por um Funcionário" id="pesq" onkeydown="paginacao('tabelaFunAgenCli')">
+      </div>
     </div>
 
-
+  
+    <div id="checkTransport">
+      <input type="checkbox" name="optDelivery" id="optDelivery" onchange="aparecerSelect()">
+      <label for="check">Deseja transportar o pet?</label>
+    </div>
+    
+    <div class="box-maior-input ">
+      <div class="box-input"  id="divTransporte" style="display: none;">
+        <label for="transporte">Como deseja o transporte?</label><br>
+        <select name="transporte" id="transporte">
+          <option value="Nenhum" selected>Nenhum</option>
+          <option value="Buscar">Buscar</option>
+          <option value="Trazer">Trazer</option>
+          <option value="Buscar/Trazer">Buscar/Trazer</option>
+        </select>
+      </div>
     </div>
 
     <?php
@@ -104,6 +120,18 @@ if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] != 'Secretaria') {
 
   <a href="<?php echo $agendamentoFunRoute; ?>">Voltar</a>
 
+  
+  <script>
+    // Função que vai aparecer o select para selecionar o tipo de transporte
+    function aparecerSelect(){
+      let checkTransporte = document.querySelector('#optDelivery');
+      if(checkTransporte.checked){
+          document.querySelector('#divTransporte').style = "display: block;"
+      }else{
+          document.querySelector('#divTransporte').style = "display: none;"
+      }
+    }
+  </script>
 
   <script src="<?php echo $functionsRoute ?>"></script>
   <script src="../../backend/funcoes/toast.js"></script>

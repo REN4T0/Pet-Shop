@@ -34,14 +34,8 @@ if (!isset($_SESSION['tipo'])) {
 
 </head>
 
-<body onload="activateToast('Veículo cadastrado com sucesso')">
+<body onload="activateToast(<?php echo verificarSession(['msgCadCar']); ?>)">
 
-    <?php
-        if (isset($_SESSION['msgCadCar'])) {
-            // echo $_SESSION['msgCadCar'];
-            unset($_SESSION['msgCadCar']);
-        }
-    ?>
 
     <div>
 
@@ -57,7 +51,16 @@ if (!isset($_SESSION['tipo'])) {
 
                 <div class="box-input">
                     <label for="nome">PLACA: </label>
-                    <input type="text" name="placa" id="placa" required autofocus placeholder="Digite o a placa do veículo" onkeyup="validarPlaca()">
+                    <input type="text" name="placa" id="placa" required autofocus
+                        placeholder="Digite o a placa do veículo" onkeyup="validarPlaca()"
+                        oninput="converterParaMaiusculas()">
+                    <label for="marca">MARCA: </label>
+                    <input type="text" name="marca" id="marca" required autofocus
+                        placeholder="Digite a marca do veículo">
+                    <label for="modelo">MODELO: </label>
+                    <input type="text" name="modelo" id="modelo" required autofocus
+                        placeholder="Digite o modelo do veículo">
+
                 </div>
 
             </div>
@@ -76,6 +79,9 @@ if (!isset($_SESSION['tipo'])) {
         </form>
 
     </div>
+    <script>
+       
+    </script>
     <script src="<?php echo $validPlacaRoute; ?>"></script>
     <script src="../../backend/funcoes/toast.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
