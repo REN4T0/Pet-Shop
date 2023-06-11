@@ -1,4 +1,6 @@
 function activateToast(param) { // função que ativa os avisos na tela de acordo com a mensagem que será passada.
+  console.log(param)
+  
   const Toast = Swal.mixin({
     toast: true,
     position: "top-start",
@@ -7,14 +9,14 @@ function activateToast(param) { // função que ativa os avisos na tela de acord
     timerProgressBar: true,
   });
 
-  if (param.includes("Bem vindo")){
+  if (param.includes("Bem vindo")) {
     Toast.fire({
       icon: "success",
       title: `${param}`,
     });
   }
 
-  switch (param){
+  switch (param) {
     case "Data cadastrada com sucesso":
       Toast.fire({
         icon: "success",
@@ -90,70 +92,70 @@ function activateToast(param) { // função que ativa os avisos na tela de acord
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Funcionário demitido com sucesso":
       Toast.fire({
         icon: "success",
         title: `${param}`,
       });
-      break; 
-    
+      break;
+
     case "Erro ao demitir funcionário":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Usuário ou senha incorretos(s)":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
-    
+      break;
+
     case "Por favor, faça o login primeiro":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Agendamento Realizado":
       Toast.fire({
         icon: "success",
         title: `${param}`,
       });
-      break; 
-    
+      break;
+
     case "Animal alterado com successo":
       Toast.fire({
         icon: "success",
         title: `${param}`,
       });
-      break; 
-    
+      break;
+
     case "Cliente Cadastrado com Sucesso":
       Toast.fire({
         icon: "success",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Email já cadastrado":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
-    
+      break;
+
     case "Cliente não Cadastrado":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Comentário enviado com sucesso":
       Toast.fire({
@@ -161,20 +163,20 @@ function activateToast(param) { // função que ativa os avisos na tela de acord
         title: `${param}`,
       });
       break;
-      
+
     case "Erro ao enviar o comentário":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Error":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Animal Excluído com Sucesso":
       Toast.fire({
@@ -188,7 +190,7 @@ function activateToast(param) { // função que ativa os avisos na tela de acord
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Alteração feita com sucesso":
       Toast.fire({
@@ -202,106 +204,171 @@ function activateToast(param) { // função que ativa os avisos na tela de acord
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Data já cadastrada":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "CPF Incorreto":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "CPF não está no sistema":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Nenhum animal encontrado para esse CPF":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Nenhum CPF encontrado":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Agendamento realizado com sucesso":
       Toast.fire({
         icon: "success",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Fora do horário comercial":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Funcionário não Cadastrado":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Senha atual incorreta":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Senha atualizada com sucesso":
       Toast.fire({
         icon: "success",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Você Não possui permissão para entrar nessa página":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Conta excluida com sucesso":
       Toast.fire({
         icon: "success",
         title: `${param}`,
       });
-      break; 
+      break;
 
     case "Data de nascimento inválida":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
+      break;
 
-    case "Placa existente":
+    case "Essa Placa já existe no banco de dados":
       Toast.fire({
         icon: "error",
         title: `${param}`,
       });
-      break; 
-  } 
+      break;
+    case "O veículo não foi cadastrado":
+      Toast.fire({
+        icon: "error",
+        title: `${param}`,
+      });
+      break;
+
+    case "A placa não corresponde ao padrão correto":
+      Toast.fire({
+        icon: "error",
+        title: `${param}`,
+      });
+      break;
+
+    case "Veículo cadastrado com sucesso":
+      Toast.fire({
+        icon: "success",
+        title: `${param}`,
+      });
+      break;
+
+      case "Carro reativado com sucesso":
+      Toast.fire({
+        icon: "success",
+        title: `${param}`,
+      });
+      break;
+
+      case "Carro desativado com sucesso":
+      Toast.fire({
+        icon: "success",
+        title: `${param}`,
+      });
+      break;
+
+      case "Erro ao desativar carro":
+      Toast.fire({
+        icon: "error",
+        title: `${param}`,
+      });
+      break;
+
+      case "Erro ao reativar carro":
+      Toast.fire({
+        icon: "error",
+        title: `${param}`,
+      });
+      break;
+
+      case "Operação realizada com sucesso":
+      Toast.fire({
+        icon: "success",
+        title: `${param}`,
+      });
+      break;
+
+      case "Operação falhou":
+      Toast.fire({
+        icon: "error",
+        title: `${param}`,
+      });
+      break;
+
+
+  }
+
 
 }
 

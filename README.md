@@ -7,7 +7,7 @@
 </p>
 
 
-## Etapas do atividade 
+## Etapas da atividade 
 
 - [x] Arquitetura de pastas
 - [x] Figma
@@ -26,9 +26,13 @@
 ## Etapas de manutenção
 *EQUIPE - Nalanda, Nathan, Robert e Renato*
 
-- [ ] Funcionalidade de transporte do pet
-
-
+- [x] Cadastro do veículo
+- [x] Listagem dos veículos
+- [x] Desativação e reativação do veículo
+- [x] Cadastro do motorista
+- [x] Seleção e inserção do tipo de transporte
+- [x] Linkagem do motorista com o veículo e agendamento designado
+- [x] Visualização do motorista e veículo escolhido para transporte
 
 ## Links e documentos
 

@@ -148,13 +148,11 @@ function gerarTabelaAgenCli() {
 
     // Setar a quantidade de items por pagina
     $qnt_result_pg = 5;
-
     // Calcular o inicio visualização
     $inicio = ($qnt_result_pg * $pagina) - $qnt_result_pg;
 
     // String de preparação
-    $stmt = $conn->prepare("SELECT Funcionarios.nome, data_agendamento,
-        horario_agendamento, Animais.nome, Agendamentos.tipo, `status`, Agendamentos.transporte, pk_Agendamento FROM Agendamentos
+    $stmt = $conn->prepare("SELECT Funcionarios.nome, data_agendamento, horario_agendamento, Animais.nome, Agendamentos.tipo, `status`, pk_Agendamento, Agendamentos.transporte FROM Agendamentos
             INNER JOIN Animais
             ON Agendamentos.fk_Animal = Animais.pk_Animal
             INNER JOIN Clientes
@@ -197,9 +195,9 @@ function gerarTabelaAgenCli() {
             $botao = "";
 
             if ($row[5] == "Marcado") {
-                $botao = "<button class='cancelar' onclick='activeModal($row[7]," . '"Cancelar"' . ")'>Cancelar</button>";
+                $botao = "<button class='cancelar' onclick='activeModal($row[6]," . '"Cancelar"' . ")'>Cancelar</button>";
             } elseif ($row[5] == "Concluido") {
-                $botao = "<button class='finalizar cancelar' onclick='activeModal($row[7]," . '"Detalhes"' . ")'>Detalhes</button>";
+                $botao = "<button class='finalizar cancelar' onclick='activeModal($row[6]," . '"Detalhes"' . ")'>Detalhes</button>";
             }
 
             $tabela = $tabela .
@@ -210,9 +208,14 @@ function gerarTabelaAgenCli() {
                     <td>$row[3]</td>
                     <td>$row[4]</td>
                     <td>$botao</td>
-                    <td>$row[5]</td>
-                    <td>$row[6]</td>
-                </tr>";
+                    <td>$row[5]</td>";
+            // Se o cliente ainda não tiver escolhido ou não escolheu transporte, e o staus do angendamento não for 'Marcado', a célula não vai aparecer como botão na tabela do funcionário
+            if(($row[7] === 'Buscar' || $row[7] === 'Trazer' || $row[7] === 'Buscar/Trazer') && ($row[5] === 'Marcado' || $row[5] === 'Concluido')){
+                $tabela .= "<td><button class='cancelar finalizar' style='width: 135px; heigth: 30px;' onclick='activeModalTransportFun($row[6]," . '"' . 'Cliente' . '"' . ")'>$row[7]</button></td>";
+            }else{
+                $tabela .= "<td>$row[7]</td>";
+            }
+            $tabela .= "</tr>";
         }
     }
 
@@ -336,7 +339,7 @@ function gerarTabelaFazAgenCli() {
     if (mysqli_num_rows($resultado) == 0) {
         $tabela = $tabela . "
             <tr>
-                <td colspan=8>Não há agendamentos cadastrados</td>
+                <td colspan=7>Não há agendamentos cadastrados</td>
             </tr>
             ";
     } else {
@@ -477,8 +480,7 @@ function gerarTabelaAgenFun() {
         $stmtPg->bind_param("sss", $_SESSION['idFun'], $pesquisar, $status);
 
     } else {
-        $stmt = $conn->prepare("SELECT Funcionarios.nome, data_agendamento, horario_agendamento, Animais.nome, Clientes.nome, `status`, pk_Agendamento, transporte from Agendamentos
-            LEFT JOIN Animais
+        $stmt = $conn->prepare("SELECT Funcionarios.nome, data_agendamento, horario_agendamento, Animais.nome, Clientes.nome, `status`, pk_Agendamento, transporte from Agendamentos            LEFT JOIN Animais
             ON Agendamentos.fk_Animal = Animais.pk_Animal
             LEFT JOIN Clientes
             ON Animais.fk_Cliente = Clientes.pk_Cliente
@@ -536,7 +538,7 @@ function gerarTabelaAgenFun() {
             }
     
             $data = date('d/m/Y', strtotime($row[1]));
-            $tabela = $tabela .
+            $tabela .=
                 "<tr>
                     <td>$row[0]</td>
                     <td>$data</td>
@@ -544,9 +546,15 @@ function gerarTabelaAgenFun() {
                     <td>$row[3]</td>
                     <td>$row[4]</td>
                     <td>$det</td>
-                    <td>$row[5]</td>
-                    <td><button class='cancelar finalizar' onclick='activeModalTransportFun($row[6]," . '"' . $_SESSION['tipo'] . '"' . ")'>$row[7]</button></td>
-                </tr>";
+                    <td>$row[5]</td>";
+            
+            // Se o cliente ainda não tiver escolhido ou não escolheu transporte, e o staus do angendamento não for 'Marcado', a célula não vai aparecer como botão na tabela do funcionário
+            if(($row[7] === 'Buscar' || $row[7] === 'Trazer' || $row[7] === 'Buscar/Trazer') && ($row[5] === 'Marcado' || $row[5] === 'Concluido')){
+                $tabela .= "<td><button class='cancelar finalizar' style='width: 135px; heigth: 30px;' onclick='activeModalTransportFun($row[6]," . '"' . $_SESSION['tipo'] . '"' . ")'>$row[7]</button></td>";
+            }else{
+                $tabela .= "<td>$row[7]</td>";
+            }
+            $tabela .= "</tr>";
         }
     }
 
@@ -623,7 +631,6 @@ function profissionais() {
     return json_encode($retornar);
 }
 
-// Função que vai pegar os detalhes
 function getDesc() {
     require_once($_SERVER['DOCUMENT_ROOT'] . '/Pet-Shop/backend/conexao.php');
 
@@ -647,13 +654,51 @@ function getDesc() {
 // Função que vai retornar a lista de motoristas e veículos do banco
 function getDrivers() {
     require_once($_SERVER['DOCUMENT_ROOT'] . '/Pet-Shop/backend/conexao.php');
+    $id = $_GET['id'];
+    
+    // Verificando se o agendamento já tem um motorista
+    $verifyExistDriver = "SELECT fk_motorista FROM Agendamentos WHERE pk_Agendamento = $id";
+    $executeVerify = mysqli_query($conn, $verifyExistDriver);
+    $arrayDriver = mysqli_fetch_assoc($executeVerify);
+    $pkDriver = $arrayDriver['fk_motorista'];
+
+    // Se o cliente já tiver um motorista, ele estará selecionando no select
+    if($pkDriver > 0){
+        // Selecionando o nome do motorista
+        $chosenDriver = "SELECT nome FROM funcionarios WHERE pk_Funcionario = $pkDriver";
+        $executeSelect = mysqli_query($conn, $chosenDriver);
+        $driverDetails = mysqli_fetch_assoc($executeSelect);
+        $driverName = $driverDetails['nome'];
+    }else{
+        $pkDriver = '';
+        $driverName = 'Selecione';
+    }
+
+    // Verificando se o agendamento tem um veículo
+    $verifyExistCar = "SELECT fk_veiculo FROM Agendamentos WHERE pk_Agendamento = $id";
+    $executeVerify = mysqli_query($conn, $verifyExistCar);
+    $arrayCar = mysqli_fetch_assoc($executeVerify);
+    $pkCar = $arrayCar['fk_veiculo'];
+
+    // Se o cliente já estiver com o veículo deefinido para o transporte, ele estará selecionando no select
+    if($pkCar > 0){
+        // Selecionando a placa do carro
+        $chosenCar = "SELECT placa FROM veiculos WHERE pk_veiculo = $pkCar";
+        $executeSelect = mysqli_query($conn, $chosenCar);
+        $carDetails = mysqli_fetch_assoc($executeSelect);
+        $licensePlate = $carDetails['placa'];
+    }else{
+        $pkCar = '';
+        $licensePlate = 'Selecione';
+    }
+
 
     // Selecionando motoristas
-    $selectDriver = "SELECT pk_Funcionario, nome FROM funcionarios WHERE profissao = 'Motorista'";
+    $selectDriver = "SELECT pk_Funcionario, nome FROM funcionarios WHERE profissao = 'Motorista' AND ativo = 'ativo'";
     $executeSelect = mysqli_query($conn, $selectDriver);
 
     // Criando o elemento HTML para selecionar motorista
-    $resposta = "<label for='nomeMotorista'>Motorista</label> <select name='motorista'> ";
+    $resposta = "<label for='nomeMotorista'>Motorista</label> <select name='motorista' required> <option value='$pkDriver' selected hidden>$driverName</option> ";
 
     // Armazenando options com os motoristas na variável resposta
     while($driver = mysqli_fetch_assoc($executeSelect)){
@@ -661,10 +706,10 @@ function getDrivers() {
     }
 
     // Concluindo o select do motorista e criando o elemento HTML para selecionar o veículo
-    $resposta .= "</select> <label for='veiculo'>Placa do veículo</label> <select name='veiculo'>";
+    $resposta .= "</select> <label for='veiculo'>Placa do veículo</label> <select name='veiculo' required> <option value='$pkCar' selected hidden>$licensePlate</option> ";
 
     // Selecionando veículos
-    $selectCar = "SELECT pk_veiculo, placa FROM veiculos";
+    $selectCar = "SELECT pk_veiculo, placa FROM veiculos WHERE ativo = 'ativo'";
     $executeSelect = mysqli_query($conn, $selectCar);
 
     while($car = mysqli_fetch_assoc($executeSelect)){
@@ -678,6 +723,52 @@ function getDrivers() {
     return $resposta;
 }
 
+// Função que vai mostrar quem irá transportar o pet
+function viewDrivers() {
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/Pet-Shop/backend/conexao.php');
+
+    $id = $_GET['id'];
+
+    // Selecionando as pks do motorista e do veículo
+    $getingDriverCar = "SELECT fk_motorista, fk_veiculo FROM agendamentos WHERE pk_Agendamento = $id";
+    $executeSelect = mysqli_query($conn, $getingDriverCar);
+    $driverCarArray = mysqli_fetch_assoc($executeSelect);
+    $driverFk = $driverCarArray['fk_motorista'];
+    $carFk = $driverCarArray['fk_veiculo'];
+
+    // Iniciando mensagem
+    $resposta = '<h5><strong>NOME DO MOTORISTA</strong></h5>';
+
+    // condição que vai verificar se o agendamento tem o motorista definido
+    if($driverFk > 0){
+        $discoverDriver = "SELECT nome FROM funcionarios WHERE pk_funcionario = $driverFk";
+        $executeDiscover = mysqli_query($conn, $discoverDriver);
+        $driverNameArray = mysqli_fetch_assoc($executeDiscover);
+        $driverName = $driverNameArray['nome'];
+
+        $resposta .= "<p>$driverName</p>";
+    }else{
+        $resposta .= '<p>Não determinado por enquanto.<br>Mas não se preocupe! Logo, logo, você saberá quem vai transportar seu pet...</p>';
+    }
+
+    $resposta .= '<h5><strong>PLACA DO VEÍCULO</strong></h5>';
+
+    // Condição que vai verificar se existe um veículo definido para transportr o pet
+    if($carFk > 0){
+        $discoverCar = "SELECT placa, marca, modelo FROM veiculos WHERE pk_veiculo = $carFk";
+        $executeDiscover = mysqli_query($conn, $discoverCar);
+        $carDetails = mysqli_fetch_assoc($executeDiscover);
+        $licensePlate = $carDetails['placa'];
+        $brand = $carDetails['marca'];
+        $model = $carDetails['modelo'];
+
+        $resposta .= "<p>Placa - $licensePlate<br>Marca - $brand<br>Modelo - $model</p>";
+    }else{
+        $resposta .= 'Não determinado por enquanto.<br>Mas não se preocupe! Logo, logo, você saberá qual veículo vai transportar seu pet...';
+    }
+
+    return $resposta;
+}
 
 
 function gerarTabelaDeleteFun() {
@@ -794,6 +885,159 @@ function gerarTabelaDeleteFun() {
 
     $retornar = array('tabela', $tabela, 'links', $linkPaginas);
     return json_encode($retornar);
+}
+
+function gerarTabelaVeiculos() {
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/Pet-Shop/backend/conexao.php');
+    $header = "http://" . $_SERVER['SERVER_NAME'] . ":" . $_SERVER['SERVER_PORT'] . '/Pet-Shop/pages/funcionario/listarVeiculos.php';
+
+    // Receber o número da página
+    $pagina_atual = filter_input(INPUT_GET, 'pag', FILTER_SANITIZE_NUMBER_INT);
+    $pagina = (!empty($pagina_atual)) ? $pagina_atual : 1;
+
+    // Setar a quantidade de items por pagina
+    $qnt_result_pg = 5;
+
+    // Calcular o inicio visualização
+    $inicio = ($qnt_result_pg * $pagina) - $qnt_result_pg;
+
+    // String de preparação
+    $stmt = $conn->prepare("SELECT pk_veiculo, placa, marca, modelo, ativo FROM veiculos
+        WHERE placa LIKE ?
+        AND ativo = ?
+        ORDER BY pk_veiculo ASC
+        LIMIT ?, ?");
+
+    $pesquisar = "%" . $_GET['pesq'] . "%";
+
+    if ($_GET['situacoes'] == '') {
+        $situacao = 'ativo';
+    } else {
+        $situacao = $_GET['situacoes'];
+    }
+
+
+    // Substituição da string preparada pelos valores corretos
+    $stmt->bind_param("ssss", $pesquisar, $situacao, $inicio, $qnt_result_pg);
+
+    // Executa o sql
+    $stmt->execute();
+    // Pega o resultado do banco
+    $resultado = $stmt->get_result();
+
+    // String que será retornada na tabela
+    $tabela =
+        "<thead><tr>
+            <th>Placa</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Desativar</th>
+        </tr></thead>";
+
+    $cont = 1;
+    if (mysqli_num_rows($resultado) == 0){
+        $tabela = $tabela . "
+            <tr>
+                <td colspan=7>Não há carros cadastrados</td>
+            </tr>
+            ";
+    } else {
+        // Pega cada linha da query e monta as linhas da tabela
+        foreach ($resultado->fetch_all() as $row) {
+            $button = "<button class='cancelar' onclick='executeFunctions(`desativarCarro`," . $row[0] . ")'>Desativar";
+
+            if ($row[4] == 'inativo') {
+                $button = "<button class='cancelar finalizar' onclick='executeFunctions(`reativarCarro`," . $row[0] . ")'>Reativar";
+            }
+            $tabela = $tabela .
+                "<tr>
+                    <td id='nome$cont'>$row[1]</td>
+                    <td>$row[2]</td>
+                    <td>$row[3]</td>
+                    <td>$button</td>
+                </tr>";
+            $cont += 1;
+        }
+    }
+    
+    // Paginação - Somar a quantidade de usuários
+    $stmtCount = $conn->prepare("SELECT COUNT(pk_veiculo) AS num_result FROM veiculos
+        WHERE placa LIKE ?
+        AND ativo = ?");
+    $stmtCount->bind_param("ss", $pesquisar, $situacao);
+    // Executa o sql
+    $stmtCount->execute();
+    // Pega o resultado do banco
+    $resultado = $stmtCount->get_result();
+    $row_pg = mysqli_fetch_assoc($resultado);
+
+    // Quantidade de pagina
+    $quantidade_pg = ceil($row_pg['num_result'] / $qnt_result_pg);
+
+    // Limitar os link antes depois
+    $max_links = 2;
+    $linkPaginas = "<a href='$header?pagina=1&situacoes=$situacao&pesq=".$_GET['pesq']."'><</a> ";
+
+    for ($pag_ant = $pagina - $max_links; $pag_ant <= $pagina - 1; $pag_ant++) {
+        if ($pag_ant >= 1) {
+            $linkPaginas =  
+            $linkPaginas . "<a href='$header?pagina=$pag_ant&situacoes=$situacao&pesq=".$_GET['pesq']."'>$pag_ant</a> ";
+        }
+    }
+
+    $linkPaginas =  $linkPaginas . "<p class='selecionado'>" . $pagina . "</p>";
+
+    for ($pag_dep = $pagina + 1; $pag_dep <= $pagina + $max_links; $pag_dep++) {
+        if ($pag_dep <= $quantidade_pg) {
+            $linkPaginas =  
+            $linkPaginas . "<a href='$header?pagina=$pag_dep&situacoes=$situacao&pesq=".$_GET['pesq']."'>$pag_dep</a> ";
+        }
+    }
+
+    $linkPaginas = 
+    $linkPaginas . " <a href='$header?pagina=$quantidade_pg&situacoes=$situacao&pesq=".$_GET['pesq']."'>></a>";
+
+    $retornar = array('tabela', $tabela, 'links', $linkPaginas);
+    return json_encode($retornar);
+}
+
+function desativarCarro(){
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/Pet-Shop/backend/conexao.php');
+
+    $id = $_GET['id'];
+
+    $stmt = $conn->prepare("UPDATE veiculos
+        SET ativo = 'inativo'
+        WHERE pk_veiculo = ?");
+    $stmt->bind_param("s", $id);
+
+    $stmt->execute();
+
+    if (mysqli_affected_rows($conn) > 0) {
+        $_SESSION['msgCadCar'] = "Carro desativado com sucesso";
+    } else {
+        $_SESSION['msgCadCar'] = "Erro ao desativar carro";
+    }
+
+}
+
+function reativarCarro(){
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/Pet-Shop/backend/conexao.php');
+
+    $id = $_GET['id'];
+
+    $stmt = $conn->prepare("UPDATE veiculos
+        SET ativo = 'ativo'
+        WHERE pk_veiculo = ?");
+    $stmt->bind_param("s", $id);
+
+    $stmt->execute();
+
+    if (mysqli_affected_rows($conn) > 0) {
+        $_SESSION['msgCadCar'] = "Carro reativado com sucesso";
+    } else {
+        $_SESSION['msgCadCar'] = "Erro ao reativar carro";
+    }
 }
 
 function update($table, $set, $where, $param) {
@@ -1031,15 +1275,14 @@ function fazerAgenParaCli(){
 
     $fkAnimal = $_GET['idAnimal'];
     $pkAgen = $_GET['idAgen'];
+    $transporte = $_GET['transporte'];
 
     if($fkAnimal == ''){
         $_SESSION['agenCliFun'] = "Selecione um animal por favor";
     } else {
-        $stmt = $conn->prepare("UPDATE Agendamentos 
-        set fk_Animal = ?, status = 'Marcado'
-        WHERE pk_Agendamento = ?");
+        $stmt = $conn->prepare("UPDATE Agendamentos set fk_Animal = ?, transporte = ?, status = 'Marcado' WHERE pk_Agendamento = ?");
 
-        $stmt->bind_param("ss", $fkAnimal, $pkAgen);
+        $stmt->bind_param("sss", $fkAnimal, $transporte, $pkAgen);
 
         $stmt->execute();
 

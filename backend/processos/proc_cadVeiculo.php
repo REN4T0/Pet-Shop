@@ -3,13 +3,9 @@
     include_once($connRoute);
 
     $placa_veiculo = htmlspecialchars($_POST['placa']);
-    echo $placa_veiculo;
+    $marca_veiculo = htmlspecialchars($_POST['marca']);
+    $modelo_veiculo = htmlspecialchars($_POST['modelo']);
 
-    // if(mysqli_insert_id($conn)){
-    //     echo 'foi';
-    // }else{
-    //     echo 'não foi';
-    // }
 
     // Padrão da placa
     $padrao = "/^[A-Za-z]{3}[0-9]{1}[a-zA-Z0-9]{1}[0-9]{2}/";
@@ -22,15 +18,15 @@
         $query = mysqli_query($conn, $sql);
         if (mysqli_num_rows($query) > 0){
 
-            $_SESSION['msgCadCar'] = "Placa existente";
+            $_SESSION['msgCadCar'] = "Essa Placa já existe no banco de dados";
             header("Location: $cadVeiculoRoute");
 
         }else{ 
 
-            // Inserindo a placa
-            $insertCar = "INSERT INTO veiculos (placa) VALUE (?)";
+            // Inserindo a placa, modelo e marca
+            $insertCar = "INSERT INTO veiculos (placa, marca, modelo) VALUES (?, ?, ?)";
             $stmt = mysqli_prepare($conn, $insertCar);
-            mysqli_stmt_bind_param($stmt, "s", $placa_veiculo);
+            mysqli_stmt_bind_param($stmt, "sss", $placa_veiculo, $marca_veiculo, $modelo_veiculo);
 
             // $insertCar = "INSERT INTO veiculos (placa) VALUE ('$placa_veiculo')";
             // $execute = mysqli_query($conn, $insertCar);
@@ -38,7 +34,7 @@
             if(mysqli_stmt_execute($stmt)){
                 // echo 'foi';
                 $_SESSION['msgCadCar'] = "Veículo cadastrado com sucesso";
-                header("Location: $cadVeiculoRoute");
+                header("Location: $listarVeiculoRoute");
             }else{
                 // echo 'não foi';
                 $_SESSION['msgCadCar'] = "O veículo não foi cadastrado";
@@ -47,7 +43,8 @@
         }
 
     }else{
-        echo "Placa errada";
+        $_SESSION['msgCadCar'] = "A placa não corresponde ao padrão correto";
+        header("Location: $cadVeiculoRoute");
     }
 
 

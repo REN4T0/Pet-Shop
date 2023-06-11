@@ -5,21 +5,36 @@ function executeFunctions(func, id) {
     if (func == "fazAgendamentoCli") {
         // Pega o id do animal
         var idAnimal = document.getElementById('animais').value
+
+       // Variável do transporte
+       let transporte = ''
+
+       // Verifica se a checkbox foi acionada
+       let checkEntrega = document.getElementById('optDelivery')
+       if(checkEntrega.checked){
+           //pega o valor do tranporte
+           transporte = document.getElementById('transporte').value
+       }else{
+           transporte = "Nenhum"
+       }
+
+        // Passa o id do agendamento e do animal para adicionar na url
+        extra = `&idAgen=${id}&idAni=${idAnimal}&transporte=${transporte}`
+    } else if (func == "fazerAgenParaCli"){
+        var idAnimal = document.getElementById('animais').value;
+
         // Variável do transporte
         let transporte = ''
+
         // Verifica se a checkbox foi acionada
         let checkEntrega = document.getElementById('optDelivery')
         if(checkEntrega.checked){
             //pega o valor do tranporte
             transporte = document.getElementById('transporte').value
         }else{
-            transporte = "nenhum"
+            transporte = "Nenhum"
         }
-        // Passa o id do agendamento e do animal para adicionar na url
-        extra = `&idAgen=${id}&idAni=${idAnimal}&transporte=${transporte}`
-    } else if (func == "fazerAgenParaCli"){
-        var idAnimal = document.getElementById('animais').value;
-        let transporte = document.getElementById('#transporte').value
+        
         extra = `&idAgen=${id}&idAnimal=${idAnimal}&transporte=${transporte}`;
     }
 
@@ -131,6 +146,12 @@ function paginacao(tipo) {
         var tipoAgen = document.getElementById('tipoAgen').value
         var data = document.getElementById('dataAgen').value
         extra = `&animais=${ani}&tipoAgen=${tipoAgen}&dataAgen=${data}`;
+
+    }else if (tipo == 'gerarTabelaVeiculos'){
+        var pesq = document.getElementById('pesq').value;
+        var filtro = document.getElementById('situacoes').value;
+
+        extra = `&pesq=${pesq}&situacoes=${filtro}`;
     }
 
     var pag = document.getElementById('pag').innerText
@@ -395,26 +416,25 @@ function activeModalDetalhesFun(id, tipo) {
     xhr.send();
 }
 
-// Função para a modal onde irei linkar o motorista com o veículo
 function activeModalTransportFun(id, tipo) {
     // Muda a modal para block, para que possa ser vista
     document.getElementById("id02").style.display = "flex"
     var xhr = new XMLHttpRequest();
     
-    // Executa o arquivo que irá iniciar a função
-    xhr.open("GET", location.origin + `/Pet-Shop/backend/execute.php?function=getDrivers&id=${id}`, false);
-    xhr.onload = function () {
-        if (xhr.readyState === xhr.DONE && xhr.status === 200) {
-            var response = xhr.responseText; // Pega a resposta do servidor
-            // Verifica se o funcionário não é um admin ou secretaria
-            // if (response == 'Os detalhes não foram adicionados ainda'){
-                if (tipo == 'Veterinario' || tipo == 'Esteticista') {
+    // Verifica se o funcionário não é um admin ou secretaria
+    if (tipo == 'Veterinario' || tipo == 'Esteticista') {
+        // Executa o arquivo que irá iniciar a função
+        xhr.open("GET", location.origin + `/Pet-Shop/backend/execute.php?function=getDrivers&id=${id}`, false);
+        xhr.onload = function () {
+            if (xhr.readyState === xhr.DONE && xhr.status === 200) {
+                var response = xhr.responseText; // Pega a resposta do servidor
+
                     // então mostra o campo para adicionar os detalhes
                     document.getElementById("container-modal2").innerHTML = `
 
                     <div class='box-modal-detalhes'>
 
-                        <h2>Descrição do Agendamento</h2>
+                        <h2>Descrição do Transporte</h2>
                         <form action=>
                             <input name="ide" hidden value="${id}"></input>
 
@@ -425,26 +445,43 @@ function activeModalTransportFun(id, tipo) {
                         </form>
                     </div>`;    
 
-                } else {
-                    // Senão só mostra que os detalhes não foram definidos.
-                    document.getElementById("container-modal").innerHTML = `
-                    <div class='box-modal-detalhes'>
-                        <h2>Descrição do Agendamento</h2>
-                        <p>Os detalhes não foram adicionados ainda</p>
-                        <span onclick="document.getElementById('id02').style.display='none'">&times;</span> 
-                    </div>`;
-
-                }
             } else {
                 // Senão só mostra que os detalhes não foram definidos.
-                document.getElementById("container-modal").innerHTML = `
+                document.getElementById("container-modal2").innerHTML = `
                 <div class='box-modal-detalhes'>
                     <h2>Descrição do Agendamento</h2>
-                    <p class='descricao-resposta'>${response}</p>
-                    <span onclick="document.getElementById('id01').style.display='none'">&times;</span>
+                    <p>As informações de transporte ainda não forma especificadas</p>
+                    <span onclick="document.getElementById('id02').style.display='none'">&times;</span> 
                 </div>`;
             }
-        // }
+        }
+    }else{
+        // Executa o arquivo que irá iniciar a função
+        xhr.open("GET", location.origin + `/Pet-Shop/backend/execute.php?function=viewDrivers&id=${id}`, false);
+        xhr.onload = function () {
+            if (xhr.readyState === xhr.DONE && xhr.status === 200) {
+                var response = xhr.responseText; // Pega a resposta do servidor
+
+                    // então mostra o campo para adicionar os detalhes
+                    document.getElementById("container-modal2").innerHTML = `
+                    <div class='box-modal-detalhes'>
+                        ${response}
+                        <li style="color: red;">Cerca de uma hora antes/depois do agendamento, o motorista irá buscar/trazer seu pet</li>
+                        <li style="color: red;">O transporte do seu pet terá um acréscimo de R$80,00 no preço total do agendamento</li>
+                        <span onclick="document.getElementById('id02').style.display='none'">&times;</span>
+                    </div>`;    
+
+            } else {
+                // Senão só mostra que os detalhes não foram definidos.
+                document.getElementById("container-modal2").innerHTML = `
+                <div class='box-modal-detalhes'>
+                    <h2>Descrição do Transporte</h2>
+                    <p>As informações de transporte ainda não foram especificadas</p>
+                    <span onclick="document.getElementById('id02').style.display='none'">&times;</span> 
+                </div>`;
+            }
+        }
+
     }
     xhr.send();
 }

@@ -1,5 +1,5 @@
-CREATE DATABASE petshop;
-USE petshop;
+-- CREATE DATABASE petshop;
+-- USE petshop;
 
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
@@ -134,7 +134,10 @@ INSERT INTO `funcionarios` (`pk_Funcionario`, `nome`, `cpf`, `profissao`, `senha
 CREATE TABLE `veiculos` (
   `pk_veiculo` int NOT NULL,
   `placa` char(7) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `fk_motorista` int UNSIGNED NOT NULL
+  `modelo` varchar(20),
+  `marca` varchar(20),
+  `ativo` enum('ativo', 'inativo') DEFAULT 'ativo',
+  `fk_motorista` int UNSIGNED
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

@@ -38,6 +38,7 @@ $cadAnimalParaClienteRoute = $rootFunPages . "cadAnimalParaCliente.php";
 $comentariosRoute = $rootFunPages . "comentarios.php";
 $cadCliFunRoute = $rootFunPages . "cadastroCliFun.php";
 $cadVeiculoRoute = $rootFunPages . "cadVeiculo.php";
+$listarVeiculoRoute = $rootFunPages . "listarVeiculos.php";
 
 //                           FIM Rotas Funcionário
 
